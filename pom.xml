@@ -10,6 +10,8 @@
 
     <properties>
         <apache-commons-deamon.version>1.0.15</apache-commons-deamon.version>
+        <log4j.version>2.8.2</log4j.version>
+        <slf4j.version>1.7.25</slf4j.version>
     </properties>
 
     <dependencies>
@@ -17,6 +19,16 @@
             <groupId>commons-daemon</groupId>
             <artifactId>commons-daemon</artifactId>
             <version>${apache-commons-deamon.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.apache.logging.log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>${log4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
         </dependency>
     </dependencies>
 
