@@ -8,5 +8,16 @@
     <artifactId>TypeaheadFiles</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <properties>
+        <apache-commons-deamon.version>1.0.15</apache-commons-deamon.version>
+    </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>commons-daemon</groupId>
+            <artifactId>commons-daemon</artifactId>
+            <version>${apache-commons-deamon.version}</version>
+        </dependency>
+    </dependencies>
 
 </project>
