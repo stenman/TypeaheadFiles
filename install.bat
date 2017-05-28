@@ -1,8 +1,11 @@
-commons-daemon\amd64\prunsrv //IS//TypeaheadFiles ^
+:: USE THIS TO INSTALL FOR WIN 64-BIT (don't forget to add a space followd by a carat in the end of each statement!)
+:: commons-daemon\amd64\prunsrv //IS//TypeaheadFiles
+:: --Install="%cd%\commons-daemon\amd64\prunsrv.exe"
+commons-daemon\prunsrv //IS//TypeaheadFiles ^
+--Install="%cd%\commons-daemon\prunsrv.exe" ^
+--Jvm="%cd%\jre1.8.0_131\bin\server\jvm.dll" ^
 --DisplayName="Typeahead Files" ^
 --Description="Quickly search for files" ^
---Install="%cd%\commons-daemon\amd64\prunsrv.exe" ^
---Jvm="%cd%\jre1.8.0_131\bin\server\jvm.dll" ^
 --StartMode=jvm ^
 --StopMode=jvm ^
 --Startup=auto ^
@@ -17,7 +20,8 @@ commons-daemon\amd64\prunsrv //IS//TypeaheadFiles ^
 --LogPath="%cd%\logs" ^
 --LogPrefix=procrun.log ^
 --StdOutput="%cd%\logs\stdout.log" ^
---StdError="%cd%\logs\stderr.log"
+--StdError="%cd%\logs\stderrr.log"
 
-
-commons-daemon\amd64\prunsrv //ES//TypeaheadFiles
+:: USE THIS TO INSTALL FOR WIN 64-BIT
+:: commons-daemon\amd64\prunsrv //ES//TypeaheadFiles
+commons-daemon\prunsrv //ES//TypeaheadFiles
