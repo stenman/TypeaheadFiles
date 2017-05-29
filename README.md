@@ -2,10 +2,10 @@ Typeahead Files - Incremental search for files on disk in selected directories
 
 INSTALL (Windows)
 NOTE: The daemon and the JRE has to be the same arcitechture (32- or 64-bit)
-# Download and add commons-daemon to root dir (check naming in pom.xml and install.bat)
-# Download and add Java JRE for windows to root dir (check naming in pom.xml and install.bat/uninstall.bat)
-# Run maven install (check for eventual errors in ..\Windows\System32\LogFiles\Apache)
-# Run install.bat (found in ..\target\installer directory)
+- Download and add commons-daemon to root dir (check naming in pom.xml and install.bat)
+- Download and add Java JRE for windows to root dir (check naming in pom.xml and install.bat/uninstall.bat)
+- Run maven install (check for eventual errors in ..\Windows\System32\LogFiles\Apache)
+- Run install.bat (found in ..\target\installer directory)
 
 
 TODO:
