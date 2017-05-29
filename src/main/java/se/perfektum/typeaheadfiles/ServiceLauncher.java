@@ -1,35 +1,53 @@
 package se.perfektum.typeaheadfiles;
 
+import com.sun.jna.Pointer;
+import com.tulskiy.keymaster.common.HotKey;
+import com.tulskiy.keymaster.common.HotKeyListener;
+import com.tulskiy.keymaster.common.Provider;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import javax.swing.*;
+
 public class ServiceLauncher implements Daemon {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceLauncher.class);
+
     private static boolean stop = false;
 
+    // TODO: This should be made dynamic, so the user can choose their own hot keys
+    private static final int VK_LEFT = 0x25;
+
     public static void main(String args[]) {
-        logger.debug("Testing logger!");
-        System.out.println("Start GUI here if combo key was pressed!");
+        logger.debug("In main function...");
+        // TODO: Start GUI here if combo key was pressed!
     }
+
     public static void startService() {
-        System.out.println("Starting service");
-        System.out.println("Waiting for combo key!");
+        logger.debug("Starting service");
+
         while (!stop) {
-            try {
-                // TODO Implement combo key listener here!
-                Thread.sleep(1000);
-            } catch (InterruptedException e) {
-            }
-            System.out.println("running");
+            final Provider provider = Provider.getCurrentProvider(false);
+
+            provider.register(KeyStroke.getKeyStroke("control shift H"), new HotKeyListener() {
+                public void onHotKey(HotKey hotKey) {
+                    System.out.println(hotKey);
+//                    provider.reset();
+//                    provider.stop();
+                }
+            });
+
+//            logger.debug("Could not register hot key!");
+//            logger.debug("Waiting for hot key to be pressed...");
+//            logger.debug("Hot key pressed! Starting GUI...");
         }
     }
 
     public static void stopService() {
-        System.out.println("Stopping service");
+        logger.debug("Stopping service");
         stop = true;
     }
 
