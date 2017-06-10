@@ -1,18 +1,17 @@
 package se.perfektum.typeaheadfiles;
 
-import com.sun.jna.Pointer;
-import com.tulskiy.keymaster.common.HotKey;
-import com.tulskiy.keymaster.common.HotKeyListener;
-import com.tulskiy.keymaster.common.Provider;
 import org.apache.commons.daemon.Daemon;
 import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
+import org.jnativehook.GlobalScreen;
+import org.jnativehook.NativeHookException;
+import org.jnativehook.keyboard.NativeKeyEvent;
+import org.jnativehook.keyboard.NativeKeyListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import javax.swing.*;
-
-public class ServiceLauncher implements Daemon {
+//TODO: de-couple the daemon from the keylistener!
+public class ServiceLauncher implements Daemon, NativeKeyListener {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceLauncher.class);
 
@@ -29,17 +28,26 @@ public class ServiceLauncher implements Daemon {
     public static void startService() {
         logger.debug("Starting service");
 
+        try {
+            logger.debug("### About to register native hook");
+            GlobalScreen.registerNativeHook();
+            logger.debug("### native hook registered!");
+        } catch (NativeHookException ex) {
+            logger.debug("### Something went wrong!");
+            System.err.println("There was a problem registering the native hook.");
+            System.err.println(ex.getMessage());
+
+            System.exit(1);
+        }
+        logger.debug("### About to add native key listener");
+        GlobalScreen.addNativeKeyListener(new ServiceLauncher());
+        logger.debug("### native key listener registered!");
         while (!stop) {
-            final Provider provider = Provider.getCurrentProvider(false);
-
-            provider.register(KeyStroke.getKeyStroke("control shift H"), new HotKeyListener() {
-                public void onHotKey(HotKey hotKey) {
-                    System.out.println(hotKey);
-//                    provider.reset();
-//                    provider.stop();
-                }
-            });
-
+            try {
+                Thread.sleep(1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
 //            logger.debug("Could not register hot key!");
 //            logger.debug("Waiting for hot key to be pressed...");
 //            logger.debug("Hot key pressed! Starting GUI...");
@@ -79,4 +87,27 @@ public class ServiceLauncher implements Daemon {
 
     }
 
+    @Override
+    public void nativeKeyTyped(NativeKeyEvent e) {
+        logger.debug("Key Typed: " + e.getKeyText(e.getKeyCode()));
+    }
+
+    @Override
+    public void nativeKeyPressed(NativeKeyEvent e) {
+        logger.debug("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+
+        if (e.getKeyCode() == NativeKeyEvent.VC_X) {
+            try {
+                logger.debug("Hot key pressed! Starting GUI...");
+                GlobalScreen.unregisterNativeHook();
+            } catch (NativeHookException e1) {
+                e1.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void nativeKeyReleased(NativeKeyEvent e) {
+        logger.debug("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
+    }
 }
