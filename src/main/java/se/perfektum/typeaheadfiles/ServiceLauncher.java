@@ -5,25 +5,15 @@ import org.apache.commons.daemon.DaemonContext;
 import org.apache.commons.daemon.DaemonInitException;
 import org.jnativehook.GlobalScreen;
 import org.jnativehook.NativeHookException;
-import org.jnativehook.keyboard.NativeKeyEvent;
-import org.jnativehook.keyboard.NativeKeyListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 //TODO: de-couple the daemon from the keylistener!
-public class ServiceLauncher implements Daemon, NativeKeyListener {
+public class ServiceLauncher implements Daemon {
 
     private static final Logger logger = LoggerFactory.getLogger(ServiceLauncher.class);
 
     private static boolean stop = false;
-
-    // TODO: This should be made dynamic, so the user can choose their own hot keys
-    private static final int VK_LEFT = 0x25;
-
-    public static void main(String args[]) {
-        logger.debug("In main function...");
-        // TODO: Start GUI here if combo key was pressed!
-    }
 
     public static void startService() {
         logger.debug("Starting service");
@@ -40,17 +30,15 @@ public class ServiceLauncher implements Daemon, NativeKeyListener {
             System.exit(1);
         }
         logger.debug("### About to add native key listener");
-        GlobalScreen.addNativeKeyListener(new ServiceLauncher());
+        GlobalScreen.addNativeKeyListener(new KeyListener());
         logger.debug("### native key listener registered!");
         while (!stop) {
             try {
-                Thread.sleep(1000);
+                logger.debug("waiting for keypress...");
+                Thread.sleep(5000);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-//            logger.debug("Could not register hot key!");
-//            logger.debug("Waiting for hot key to be pressed...");
-//            logger.debug("Hot key pressed! Starting GUI...");
         }
     }
 
@@ -63,7 +51,7 @@ public class ServiceLauncher implements Daemon, NativeKeyListener {
         if ("start".equals(args[0])) {
             startService();
         } else if ("stop".equals(args[0])) {
-            stopService();
+        stopService();
         }
     }
 
@@ -85,29 +73,5 @@ public class ServiceLauncher implements Daemon, NativeKeyListener {
     @Override
     public void destroy() {
 
-    }
-
-    @Override
-    public void nativeKeyTyped(NativeKeyEvent e) {
-        logger.debug("Key Typed: " + e.getKeyText(e.getKeyCode()));
-    }
-
-    @Override
-    public void nativeKeyPressed(NativeKeyEvent e) {
-        logger.debug("Key Pressed: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
-
-        if (e.getKeyCode() == NativeKeyEvent.VC_X) {
-            try {
-                logger.debug("Hot key pressed! Starting GUI...");
-                GlobalScreen.unregisterNativeHook();
-            } catch (NativeHookException e1) {
-                e1.printStackTrace();
-            }
-        }
-    }
-
-    @Override
-    public void nativeKeyReleased(NativeKeyEvent e) {
-        logger.debug("Key Released: " + NativeKeyEvent.getKeyText(e.getKeyCode()));
     }
 }
